@@ -20,6 +20,9 @@ public class MyTree {
 		rootright.left.right = new TreeNode(12);
 		rootright.right.left = new TreeNode(13);
 		rootright.right.left.right = new TreeNode(14);
+		TreeNode BSTroot = new TreeNode(1);
+		BSTroot.right = new TreeNode(2);
+		BSTroot.right.right = new TreeNode(3);
 		System.out.println(preorder(root));
 		System.out.println(inorder(root));
 		System.out.println(postorder(root));
@@ -32,6 +35,8 @@ public class MyTree {
 		System.out.println(getHeight(root));
 		levelPrint(root);
 		zigZag(root);
+		System.out.println("Min dif is " + MinDif(BSTroot));
+		System.out.println("number of nodes is " + countNodes(root));
 	}
 
 	// post order traversal
@@ -173,7 +178,54 @@ public class MyTree {
 		}
 		return max;
 	}
+	
+	public static int MinDif(TreeNode root){
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		ArrayList<Integer> vals = new ArrayList<>();
+		q.add(root);
+		
+		int length = 0;
+		while(q.size()>0){
+			TreeNode cur = q.poll();
+			vals.add(cur.val);
+			length++;
+			if(cur.left!=null){
+				q.add(cur.left);
+			}
+			if(cur.right!=null){
+				q.add(cur.right);
+			}
+		}
+		int[] temp = new int[length];
+		
+		for(int i = 0; i < length; i++){
+			temp[i] = vals.get(i);
+		}
+		Arrays.sort(temp);
+		int min = temp[length-1];
+		for(int i = 0; i < length -1; i++){
+			min = Math.min(temp[i+1] - temp[i] , min);
+		}
+		return min;
+	}
 
+	public static int countNodes(TreeNode root){
+		Queue<TreeNode> q = new LinkedList<>();		
+		int count = 1;
+		while(q.size()>0){
+			TreeNode cur = q.poll();
+			if(cur.left!=null){
+				q.add(cur.left);
+				count++;
+			}
+			if(cur.right!=null){
+				q.add(cur.right);
+				count++;
+			}
+		}		
+		return count;
+	}
+	
 	public static void levelPrint(TreeNode root){
 		Queue<NodeWLevel> q = new LinkedList<>();
 		q.add(new NodeWLevel(root, 1));
