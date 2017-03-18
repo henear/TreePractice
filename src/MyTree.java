@@ -22,7 +22,7 @@ public class MyTree {
 		rootright.right.left.right = new TreeNode(14);
 		TreeNode BSTroot = new TreeNode(1);
 		BSTroot.right = new TreeNode(2);
-		BSTroot.right.right = new TreeNode(3);
+		BSTroot.left = new TreeNode(3);
 		System.out.println(preorder(root));
 		System.out.println(inorder(root));
 		System.out.println(postorder(root));
@@ -35,8 +35,10 @@ public class MyTree {
 		System.out.println(getHeight(root));
 		levelPrint(root);
 		zigZag(root);
+		System.out.println("Sum of left leaves is: " + sumOfLeftLeaves(BSTroot));
 		System.out.println("Min dif is " + MinDif(BSTroot));
 		System.out.println("number of nodes is " + countNodes(root));
+		System.out.println("Sum of left leave is " + sumOfLeftLeaves(root));
 	}
 
 	// post order traversal
@@ -177,6 +179,26 @@ public class MyTree {
 			}
 		}
 		return max;
+	}
+	
+	public static int sumOfLeftLeaves(TreeNode root){
+		//Do BFS
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int sum = 0;
+		while(q.size() > 0 ){
+			TreeNode cur = q.poll();
+			if(cur.left != null){
+				q.add(cur.left);
+				if(cur.left.left == null && cur.left.right == null){
+					sum += cur.left.val;
+				}
+			}
+			if(cur.right != null){
+				q.add(cur.right);
+			}
+		}
+		return sum;
 	}
 	
 	public static int MinDif(TreeNode root){
