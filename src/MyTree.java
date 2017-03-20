@@ -40,6 +40,7 @@ public class MyTree {
 		System.out.println("Min dif is " + MinDif(BSTroot));
 		System.out.println("number of nodes is " + countNodes(root));
 		System.out.println("Sum of left leave is " + sumOfLeftLeaves(root));
+		System.out.println("Unitree boolean is " + uniTree(root));
 	}
 
 	// post order traversal
@@ -104,17 +105,20 @@ public class MyTree {
 		h.add(root.val);
 		q.add(root);
 		while(q.size()>0&&b){
+			System.out.println(h.toString());
 			TreeNode cur = q.poll();
 			if(cur.left!=null){
 				q.add(cur.left);
-				if(!h.add(cur.left.val)){
+				if(h.add(cur.left.val)){
 					b = false;
+					break;
 				}
 			}
 			if(cur.right!=null){
 				q.add(cur.right);
-				if(!h.add(cur.right.val)){
+				if(h.add(cur.right.val)){
 					b = false;
+					break;
 				}
 			}
 		}
