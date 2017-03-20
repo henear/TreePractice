@@ -32,7 +32,8 @@ public class MyTree {
 		System.out.println(hasPathSumI(root, 2));
 		System.out.println(hasPathSumR(root, 2));
 		hasPathSumIIR(root, 2);
-		System.out.println(getHeight(root));
+		System.out.println("iterative get height: " + getHeight(root));
+		System.out.println("recursion get height: " + getHeightR(root));
 		levelPrint(root);
 		zigZag(root);
 		System.out.println("Sum of left leaves is: " + sumOfLeftLeaves(BSTroot));
@@ -96,6 +97,30 @@ public class MyTree {
 		System.out.println(Arrays.toString(maxNode));
 	}
 
+	public static boolean uniTree(TreeNode root){
+		boolean b = true;
+		HashSet<Integer> h = new HashSet<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		h.add(root.val);
+		q.add(root);
+		while(q.size()>0&&b){
+			TreeNode cur = q.poll();
+			if(cur.left!=null){
+				q.add(cur.left);
+				if(!h.add(cur.left.val)){
+					b = false;
+				}
+			}
+			if(cur.right!=null){
+				q.add(cur.right);
+				if(!h.add(cur.right.val)){
+					b = false;
+				}
+			}
+		}
+		return b;
+	}
+	
 	public static boolean hasPathSumI(TreeNode root, int sum){
 		Stack<TreeNode> stack = new Stack<>();
 		Stack<Integer> sums = new Stack<>();
@@ -164,6 +189,15 @@ public class MyTree {
 		return result[n];
 	}
 
+	public static int getHeightR(TreeNode root){
+		if(root == null){
+			return 0;
+		}else{
+			return 1 + Math.max(getHeightR(root.left), 
+					getHeightR(root.right));
+		}
+	}
+	
 	public static int getHeight(TreeNode root){
 		Queue<NodeWLevel> q = new LinkedList<>();
 		q.add(new NodeWLevel(root, 1));
