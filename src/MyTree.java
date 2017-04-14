@@ -2,6 +2,7 @@ import java.util.*;
 public class MyTree {
 
 	public static void main(String[] args) {
+		
 		// TODO Auto-generated method stub
 		TreeNode root = new TreeNode(0);
 		TreeNode rootleft = new TreeNode(1);
@@ -22,10 +23,13 @@ public class MyTree {
 		rootright.right.left.right = new TreeNode(14);
 		TreeNode BSTroot = new TreeNode(1);
 		BSTroot.right = new TreeNode(2);
+		
 		BSTroot.left = new TreeNode(3);
-		System.out.println(preorder(root));
-		System.out.println(inorder(root));
-		System.out.println(postorder(root));
+		System.out.println("preorder: " +  preorder(root));
+		System.out.println("inorder: " + inorder(root));
+		System.out.println("postorder: " + postorder(root));
+		System.out.println("BSADFASFD "  + BSTroot.right.left);
+		DFS(root);
 		BFS(root);
 		System.out.println(numTrees(1));
 		// Iterative and Recursive solution of the has Path Sum problem
@@ -33,6 +37,7 @@ public class MyTree {
 		System.out.println(hasPathSumR(root, 2));
 		hasPathSumIIR(root, 2);
 		System.out.println("iterative get height: " + getHeight(root));
+		
 		System.out.println("recursion get height: " + getHeightR(root));
 		levelPrint(root);
 		zigZag(root);
@@ -193,12 +198,22 @@ public class MyTree {
 		return result[n];
 	}
 
+	
 	public static int getHeightR(TreeNode root){
 		if(root == null){
+			return -1;
+		}
+		else{
+			return getHeightRHelper(root);
+		}
+	}
+	
+	public static int getHeightRHelper(TreeNode root){
+		if(root == null){
 			return 0;
-		}else{
-			return 1 + Math.max(getHeightR(root.left), 
-					getHeightR(root.right));
+		} else {
+			return 1 + Math.max(getHeightRHelper(root.left), 
+					getHeightRHelper(root.right));
 		}
 	}
 	
@@ -320,6 +335,24 @@ public class MyTree {
 			}
 			System.out.println(cur.toString());
 		}
+	}
+	
+	public static void DFS(TreeNode root){
+		Stack<TreeNode> st = new Stack<TreeNode>();
+		
+		st.add(root);
+		while(st.size()!=0){
+			
+			
+			TreeNode cur = st.pop();
+			System.out.print(cur.val+" ");
+			if(cur.right!=null){
+				st.push(cur.right);
+			}if(cur.left!=null){
+				st.push(cur.left);
+			}
+		}
+		System.out.println();
 	}
 
 	public static void zigZag(TreeNode root){
