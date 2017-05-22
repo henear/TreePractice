@@ -22,14 +22,21 @@ public class MyTree {
 		rootright.right.left = new TreeNode(13);
 		rootright.right.left.right = new TreeNode(14);
 		TreeNode BSTroot = new TreeNode(1);
+		
 		BSTroot.right = new TreeNode(2);
 		
 		BSTroot.left = new TreeNode(3);
+		System.out.println("dfas" + largestValues(root));
 		System.out.println("preorder: " +  preorder(root));
+		System.out.println("preorderi: " +  preorderi(root));
 		System.out.println("inorder: " + inorder(root));
 		System.out.println("postorder: " + postorder(root));
 		System.out.println("BSADFASFD "  + BSTroot.right.left);
+		System.out.println("Iterative DFS: ");
 		DFS(root);
+		System.out.println("Recursive DFS: ");
+		
+		DFSR(root);
 		BFS(root);
 		System.out.println(numTrees(1));
 		// Iterative and Recursive solution of the has Path Sum problem
@@ -66,6 +73,23 @@ public class MyTree {
 			mylist.add(root.val);
 			mylist.addAll(preorder(root.left));
 			mylist.addAll(preorder(root.right));
+		}
+		return mylist;
+	}
+	
+	public static List<Integer> preorderi(TreeNode root){
+		ArrayList<Integer> mylist = new ArrayList<>();
+		Stack<TreeNode> st = new Stack<>();
+		st.push(root);
+		while(st.size() > 0){
+			//mylist.add(st.pop().val);
+			TreeNode cur = st.pop();
+			mylist.add(cur.val);
+			if(cur.right!=null){
+				st.push(cur.right);
+			}if(cur.left!= null){
+				st.push(cur.left);
+			}
 		}
 		return mylist;
 	}
@@ -354,6 +378,15 @@ public class MyTree {
 		}
 		System.out.println();
 	}
+	
+	public static void DFSR(TreeNode root){
+		System.out.print(root.val + " ");
+		if(root.left!=null){
+			DFSR(root.left);
+		}if(root.right!=null){
+			DFSR(root.right);
+		}
+	}
 
 	public static void zigZag(TreeNode root){
 		Queue<NodeWLevel> q = new LinkedList<>();
@@ -396,6 +429,38 @@ public class MyTree {
 			System.out.println(cur.toString());
 		}
 	}
+	
+	public static List<Integer> largestValues(TreeNode root) {
+        if(root == null){
+            return null;
+        }else{
+            List<Integer> result = new ArrayList<Integer>();
+            TreeMap<Integer, Integer> tm = new TreeMap<Integer, Integer>();
+            Queue<NodeLevel> q = new LinkedList<>();
+            NodeLevel first = new NodeLevel(root, 0);
+            q.add(first);
+            while(q.size()>0){
+            	
+                NodeLevel cur = q.poll();
+                int curval = cur.tr.val;
+                int curLevel = cur.level;
+                if(tm.containsKey(curLevel)){
+                    tm.put(curLevel, Math.max(tm.get(curLevel), curval));
+                }else{
+                    tm.put(curLevel, curval);
+                }
+                if(cur.tr.left!=null){
+                    q.add(new NodeLevel(cur.tr.left, curLevel + 1));
+                }if(cur.tr.right!=null){
+                    q.add(new NodeLevel(cur.tr.right, curLevel + 1));
+                }
+            }
+            for(int i : tm.keySet()){
+                result.add(tm.get(i));
+            }
+            return result;
+        }
+    }
 
 	public static class NodeWLevel {
 		TreeNode dest;
@@ -406,4 +471,13 @@ public class MyTree {
 			this.level = level;
 		}
 	}
+	
+	public static class NodeLevel{
+        TreeNode tr;
+        int level;
+        public NodeLevel(TreeNode tr, int level){
+            this.tr = tr;
+            this.level = level;
+        }
+    }
 }
