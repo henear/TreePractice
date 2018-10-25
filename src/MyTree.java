@@ -34,6 +34,7 @@ public class MyTree {
 		System.out.println("preorder: " +  preorder(root));
 //		System.out.println("preorderi: " +  preorderi(root));
 		System.out.println("inorder: " + inorder(root));
+		System.out.println("inorder Iterative: " + inorderI(root));
 		System.out.println("postorder: " + postorder(root));
 		System.out.println("BSADFASFD "  + BSTroot.right.left);
 		System.out.println("Iterative DFS: ");
@@ -144,9 +145,7 @@ public class MyTree {
 		}else {
 			return Math.max(maxPathSum(root.left), maxPathSum(root.right)) + root.val;
 		}
-	}
-	
-	
+	}	
 	
 	public static int SecondLarge(TreeNode BSTRoot) {
 		if(BSTRoot.right != null) {
@@ -231,9 +230,7 @@ public class MyTree {
 	    return result;
 	}
 
-	// pre order traversal
-	
-	
+	// pre order traversal	
 	public static List<Integer> preorder(TreeNode root){
 		ArrayList<Integer> myList = new ArrayList<>();
 		
@@ -255,6 +252,26 @@ public class MyTree {
 			mylist.addAll(inorder(root.right));
 		}
 		return mylist;
+	}
+
+	public static List<Integer> inorderI(TreeNode root){
+		ArrayList<Integer> myList = new ArrayList<Integer>();
+		Stack<TreeNode> st = new Stack<>();
+		while(root != null){
+			st.push(root);
+			root = root.left;
+
+		}
+		while(st.size() > 0){
+			TreeNode curr = st.pop();
+			myList.add(curr.val);
+			TreeNode p = curr.right;
+			while(p != null){
+				st.push(p);
+				p = p.left;
+			}
+		}
+		return myList;
 	}
 
 	public static void BFSI(TreeNode root){
