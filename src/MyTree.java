@@ -4,6 +4,8 @@ public class MyTree {
 	public static void main(String[] args) {
 		
 		// TODO Auto-generated method stub
+		
+
 		TreeNode root = new TreeNode(0);
 		TreeNode rootleft = new TreeNode(1);
 		TreeNode rootright = new TreeNode(2);
@@ -19,25 +21,28 @@ public class MyTree {
 		rootleft.right.right = new TreeNode(10);
 		rootright.left.left = new TreeNode(11);
 		rootright.left.right = new TreeNode(12);
-		rootright.right.left = new TreeNode(13);
+		rootright.right.left = new TreeNode(15);
 		rootright.right.left.right = new TreeNode(14);
+		rootright.right.left.left = new TreeNode(-28);
 		TreeNode BSTroot = new TreeNode(1);
 		
 		BSTroot.right = new TreeNode(2);
 		
 		BSTroot.left = new TreeNode(3);
+		System.out.println("Smallest in a Tree: " + SmallestinTree(root));
 		System.out.println("dfas" + largestValues(root));
 		System.out.println("preorder: " +  preorder(root));
-		System.out.println("preorderi: " +  preorderi(root));
+//		System.out.println("preorderi: " +  preorderi(root));
 		System.out.println("inorder: " + inorder(root));
 		System.out.println("postorder: " + postorder(root));
 		System.out.println("BSADFASFD "  + BSTroot.right.left);
 		System.out.println("Iterative DFS: ");
 		DFS(root);
-		System.out.println("Recursive DFS: ");
-		
+		System.out.println("Recursive DFS: ");		
 		DFSR(root);
+		System.out.println();
 		BFS(root);
+		BFSI(root);
 		System.out.println(numTrees(1));
 		// Iterative and Recursive solution of the has Path Sum problem
 		System.out.println(hasPathSumI(root, 2));
@@ -53,47 +58,194 @@ public class MyTree {
 		System.out.println("number of nodes is " + countNodes(root));
 		System.out.println("Sum of left leave is " + sumOfLeftLeaves(root));
 		System.out.println("Unitree boolean is " + uniTree(root));
+		System.out.println("Count of unitree is " + countUniTree(root));
+		TreeNode BSTRoot = new TreeNode(0);
+//		BSTRoot.left = new TreeNode(-2);
+		BSTRoot.right = new TreeNode(2);
+//		BSTRoot.left.left = new TreeNode(-4);
+//		BSTRoot.left.right = new TreeNode(-1);
+		BSTRoot.right.right = new TreeNode(5);
+//		BSTRoot.right.left = new TreeNode(1);
+		
+		
+		
+		System.out.println(SmallestBST(BSTRoot));
+		System.out.println(SecondSmall(BSTRoot));
+		System.out.println(LargestBST(BSTRoot));
+		System.out.println(SecondLarge(BSTRoot));
+		System.out.println("Max Path Sum: " + maxPathSum(root));
+		System.out.println("Min Path Sum: " + minPathSum(root));
+		System.out.println(longestIncreasingSeq(root));
+	}
+
+	public static int SmallestinTree(TreeNode root){
+		int result = Integer.MAX_VALUE;
+		return SmallestinTreehelper(root, result);
+		
+	}
+
+	public static int SmallestinTreehelper(TreeNode root, int result){
+		if(root == null){
+			return result;
+		}else{
+			result = Math.min(result, root.val);
+			
+			return Math.min(result, Math.min(SmallestinTreehelper(root.left, result), SmallestinTreehelper(root.right, result)));
+			
+
+		}
+	} 
+	
+	public static int longestIncreasingSeq(TreeNode root) {
+		if(root == null) {
+			return 1;
+		}else {
+			if(root.left == null && root.right == null) {
+				return 1;
+			}else if(root.left != null && root.right == null) {
+				if(root.left.val > root.val) {
+					return 1 + longestIncreasingSeq(root.left);
+				}else {
+					return 1;
+				}				
+			}else if(root.left == null && root.right != null) {
+				if(root.right.val > root.val) {
+					return 1 + longestIncreasingSeq(root.left);
+				}else {
+					return 1;
+				}
+			}else {
+				if(root.left.val > root.val && root.right.val > root.val) {
+					return 1 + Math.max(longestIncreasingSeq(root.left), longestIncreasingSeq(root.right));
+				}else if(root.left.val <= root.val && root.right.val > root.val) {
+					return 1 + longestIncreasingSeq(root.right);
+				}else if(root.left.val > root.val && root.right.val <= root.val) {
+					return 1 + longestIncreasingSeq(root.left);
+				}else {
+					return 1;
+				}
+			}
+		}
+	}
+	
+	public static int minPathSum(TreeNode root) {
+		if(root == null) {
+			return 0;
+		}else {
+			return Math.min(minPathSum(root.left), minPathSum(root.right)) + root.val;
+		}
+	}
+	
+	public static int maxPathSum(TreeNode root) {
+		
+		if(root == null) {
+			return 0;
+			
+		}else {
+			return Math.max(maxPathSum(root.left), maxPathSum(root.right)) + root.val;
+		}
+	}
+	
+	
+	
+	public static int SecondLarge(TreeNode BSTRoot) {
+		if(BSTRoot.right != null) {
+			TreeNode slowPtr = BSTRoot;
+			TreeNode fastPtr = BSTRoot.right;
+			while(fastPtr.right != null) {
+				slowPtr = fastPtr;
+				fastPtr = fastPtr.right;
+			}
+			return slowPtr.val;
+		}else {
+			return LargestBST(BSTRoot.left);
+		}
+	}
+	
+	public static int SecondSmall(TreeNode BSTRoot) {
+		if(BSTRoot.left != null) {
+			TreeNode fastPtr = BSTRoot.left;
+			TreeNode slowPtr = BSTRoot;
+			while(fastPtr.left != null) {
+				
+				slowPtr = fastPtr;
+				fastPtr = fastPtr.left;
+			}
+			return slowPtr.val;
+		}else {
+			return SmallestBST(BSTRoot.right);
+		}		
+	}
+
+	public static int LargestBST(TreeNode root) 	
+	{
+		if(root.right == null) {
+			return root.val;
+		}else {
+			while(root.right != null) {
+				root = root.right;
+			}
+			return root.val;
+		}
+	}
+
+	public static int SmallestBST(TreeNode root) 	
+	{
+		if(root.left == null) {
+			return root.val;
+		}else {
+			while(root.left != null) {
+				root = root.left;
+			}
+			return root.val;
+		}
 	}
 
 	// post order traversal
-	public static List<Integer> postorder(TreeNode root) {
-		ArrayList<Integer> mylist = new ArrayList<>();
-		if(root != null){			
-			mylist.addAll(preorder(root.left));
-			mylist.addAll(preorder(root.right));
-			mylist.add(root.val);
+	public static int countUniTree(TreeNode root){
+		if (root == null){
+			return 0;
+		}else{
+			if (uniTree(root)){
+				return 1 + countUniTree(root.left) + countUniTree(root.right);
+			}else{
+				return countUniTree(root.left) + countUniTree(root.right);
+			}
 		}
-		return mylist;
+	}
+
+	public static List<Integer> postorder(TreeNode root) {
+		LinkedList<Integer> result = new LinkedList<>();
+	    Deque<TreeNode> stack = new ArrayDeque<>();
+	    TreeNode p = root;
+	    while(!stack.isEmpty() || p != null) {
+	        if(p != null) {
+	            stack.push(p);
+	            result.addFirst(p.val);  // Reverse the process of preorder
+	            p = p.right;             // Reverse the process of preorder
+	        } else {
+	            TreeNode node = stack.pop();
+	            p = node.left;           // Reverse the process of preorder
+	        }
+	    }
+	    return result;
 	}
 
 	// pre order traversal
+	
+	
 	public static List<Integer> preorder(TreeNode root){
-		ArrayList<Integer> mylist = new ArrayList<>();
+		ArrayList<Integer> myList = new ArrayList<>();
+		
 		if(root != null){
-			mylist.add(root.val);
-			mylist.addAll(preorder(root.left));
-			mylist.addAll(preorder(root.right));
+			myList.add(root.val);
+			myList.addAll(preorder(root.left));
+			myList.addAll(preorder(root.right));
 		}
-		return mylist;
+		return myList;
 	}
 	
-	public static List<Integer> preorderi(TreeNode root){
-		ArrayList<Integer> mylist = new ArrayList<>();
-		Stack<TreeNode> st = new Stack<>();
-		st.push(root);
-		while(st.size() > 0){
-			//mylist.add(st.pop().val);
-			TreeNode cur = st.pop();
-			mylist.add(cur.val);
-			if(cur.right!=null){
-				st.push(cur.right);
-			}if(cur.left!= null){
-				st.push(cur.left);
-			}
-		}
-		return mylist;
-	}
-
+	
 	//in order traversal
 	public static List<Integer> inorder(TreeNode root){
 		ArrayList<Integer> mylist = new ArrayList<Integer>();
@@ -103,6 +255,33 @@ public class MyTree {
 			mylist.addAll(inorder(root.right));
 		}
 		return mylist;
+	}
+
+	public static void BFSI(TreeNode root){
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		Queue<TreeNode> q = new LinkedList<>();
+		if(root == null){
+			return;
+		}else{
+			q.add(root);
+			while(q.size() > 0){
+				ArrayList<Integer> curLevel = new ArrayList<>();
+				int l = q.size();
+				for(int i = 0; i < l; i++){
+					TreeNode curr = q.poll();
+					curLevel.add(curr.val);
+					if(curr.left != null){
+						q.add(curr.left);
+					}
+					if(curr.right != null){
+						q.add(curr.right);
+					}
+				}
+				result.add(curLevel);
+			}
+		}
+		System.out.println("Iterative BFS");
+		System.out.println(result);	
 	}
 
 	public static void BFS(TreeNode root){
@@ -387,7 +566,8 @@ public class MyTree {
 			DFSR(root.right);
 		}
 	}
-
+	
+	
 	public static void zigZag(TreeNode root){
 		Queue<NodeWLevel> q = new LinkedList<>();
 		q.add(new NodeWLevel(root, 1));
