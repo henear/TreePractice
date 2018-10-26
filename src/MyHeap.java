@@ -5,12 +5,54 @@ public class MyHeap{
 		TreeNode[] minHeap = baseHeap(maxVal);
 
 		printTree(minHeap);
-		addValue(minHeap, 8);
-		addValue(minHeap, 10);
-		addValue(minHeap, 11);
-		addValue(minHeap, 14);
+		minHeap = addValue(minHeap, 8);
+
+		minHeap = addValue(minHeap, 10);
+		minHeap = addValue(minHeap, 11);
+		minHeap = addValue(minHeap, 14);
+		
+		System.out.println("Size of the heap: " + getSize(minHeap));
+		removeTop(minHeap);
 		System.out.println(searchVal(minHeap, 12));
 		System.out.println(searchVal(minHeap, 2));
+	}
+
+	public static void removeTop(TreeNode[] currTree){
+		printTree(currTree);
+		int size = getSize(currTree);
+		int lastVal = currTree[size].val;
+		currTree[size] = null;
+		currTree[1].val = lastVal;
+		System.out.println(getSize(currTree));
+		int i = 1;
+		while(i * 2 + 1 <= size -1 && (currTree[i].val > currTree[2*i].val || currTree[i].val > currTree[2*i+1].val)){
+			if(currTree[2*i+1].val > currTree[2*i].val){
+				int temp = currTree[i].val;
+				currTree[i].val = currTree[2*i].val;
+				currTree[2*i].val = temp;
+				i = i * 2;
+
+			}else{
+				int temp = currTree[i].val;
+				currTree[i].val = currTree[2*i+1].val;
+				currTree[2*i + 1].val = temp;
+				i = i * 2 + 1;
+
+			}
+		}
+		printTree(currTree);
+		
+		return;
+	}
+
+	public static int getSize(TreeNode[] currTree){
+		int sizes = 0;
+		for(int i = 1; i < currTree.length; i++){
+			if(currTree[i] != null){
+				sizes ++;
+			}
+		}
+		return sizes;
 	}
 
 	public static boolean searchVal(TreeNode[] currTree, int val){
@@ -20,8 +62,6 @@ public class MyHeap{
 			}
 			if(currTree[i].val == val){
 				return true;
-			}else if(currTree[i].val > val){
-				break;
 			}
 		}
 		return false;
@@ -30,7 +70,7 @@ public class MyHeap{
 	public static TreeNode[] addValue(TreeNode[] currTree, int val){
 		int count = 0;
 		for(int i = 1; i < currTree.length; i++){
-			if(currTree[i] != null){
+			if(null != currTree[i] ){
 				count ++;
 			}else{
 				break;
@@ -53,9 +93,7 @@ public class MyHeap{
 		}else{
 			currTree[(count+1) / 2].right = currTree[(count+1)];
 		}
-		System.out.println("~~~~~");
-		printTree(currTree);
-		System.out.println("~~~~~");
+
 		int i = count + 1;
 		while (currTree[i].val < currTree[i/2].val && i > 0){
 			int temp = currTree[i].val;
@@ -63,10 +101,8 @@ public class MyHeap{
 			currTree[i/2].val = temp;
 			i = i / 2;
 		}
-		System.out.println("~~~~~");
-		printTree(currTree);
-		System.out.println("~~~~~");
-		return null;
+
+		return currTree;
 
 	}
 
