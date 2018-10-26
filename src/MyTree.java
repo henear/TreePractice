@@ -24,11 +24,15 @@ public class MyTree {
 		rootright.right.left = new TreeNode(15);
 		rootright.right.left.right = new TreeNode(14);
 		rootright.right.left.left = new TreeNode(-28);
-		TreeNode BSTroot = new TreeNode(1);
-		
-		BSTroot.right = new TreeNode(2);
-		
+		TreeNode BSTroot = new TreeNode(8);
+		BSTroot.right = new TreeNode(20);		
 		BSTroot.left = new TreeNode(3);
+		BSTroot.right.right = new TreeNode(29);
+		BSTroot.right.left = new TreeNode(17);
+		BSTroot.left.right = new TreeNode(6);
+		BSTroot.left.left = new TreeNode(1);
+
+		
 		System.out.println("Smallest in a Tree: " + SmallestinTree(root));
 		System.out.println("dfas" + largestValues(root));
 		System.out.println("preorder: " +  preorder(root));
@@ -61,12 +65,12 @@ public class MyTree {
 		System.out.println("Unitree boolean is " + uniTree(root));
 		System.out.println("Count of unitree is " + countUniTree(root));
 		TreeNode BSTRoot = new TreeNode(0);
-//		BSTRoot.left = new TreeNode(-2);
+		BSTRoot.left = new TreeNode(-2);
 		BSTRoot.right = new TreeNode(2);
-//		BSTRoot.left.left = new TreeNode(-4);
-//		BSTRoot.left.right = new TreeNode(-1);
+		BSTRoot.left.left = new TreeNode(-4);
+		BSTRoot.left.right = new TreeNode(-1);
 		BSTRoot.right.right = new TreeNode(5);
-//		BSTRoot.right.left = new TreeNode(1);
+		BSTRoot.right.left = new TreeNode(1);
 		
 		
 		
@@ -74,9 +78,47 @@ public class MyTree {
 		System.out.println(SecondSmall(BSTRoot));
 		System.out.println(LargestBST(BSTRoot));
 		System.out.println(SecondLarge(BSTRoot));
+		System.out.println("Search 2 in BST: " + SearchVal(BSTRoot, 2));
+		System.out.println("Search 14 in BST: " + SearchVal(BSTRoot, 14));
+		System.out.println("Add 28 in BST");
+		// System.out.println("Add 28 in BST: " + SearchVal(BSTRoot, 28));
+		System.out.println("Before adding, the in order BST is " + inorderI(BSTRoot));
+		TreeNode newBST = addNodeBST(BSTRoot, 28);
+		System.out.println("After adding, the in order BST is " + inorderI(newBST));
+
 		System.out.println("Max Path Sum: " + maxPathSum(root));
 		System.out.println("Min Path Sum: " + minPathSum(root));
 		System.out.println(longestIncreasingSeq(root));
+	}
+
+	public static TreeNode deleteNodeBST(TreeNode root, int val){
+		return null;
+	}
+
+	public static TreeNode addNodeBST(TreeNode root, int val){
+		if(root == null){
+			return new TreeNode(val);
+		}
+		if(val < root.val){
+			root.left = addNodeBST(root.left, val);
+		}else if(val > root.val){
+			root.right = addNodeBST(root.right, val);
+		}
+		return root;
+	}
+
+	public static boolean SearchVal(TreeNode root, int val){
+		if(root == null){
+			return false;
+		}else if(root.val == val){
+			return true;
+		}else{
+			if(root.val < val){
+				return SearchVal(root.right, val);
+			}else{
+				return SearchVal(root.left, val);
+			}
+		}
 	}
 
 	public static int SmallestinTree(TreeNode root){
@@ -89,11 +131,8 @@ public class MyTree {
 		if(root == null){
 			return result;
 		}else{
-			result = Math.min(result, root.val);
-			
+			result = Math.min(result, root.val);			
 			return Math.min(result, Math.min(SmallestinTreehelper(root.left, result), SmallestinTreehelper(root.right, result)));
-			
-
 		}
 	} 
 	
@@ -265,10 +304,10 @@ public class MyTree {
 		while(st.size() > 0){
 			TreeNode curr = st.pop();
 			myList.add(curr.val);
-			TreeNode p = curr.right;
-			while(p != null){
-				st.push(p);
-				p = p.left;
+			curr = curr.right;
+			while(curr != null){
+				st.push(curr);
+				curr = curr.left;
 			}
 		}
 		return myList;
