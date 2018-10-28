@@ -36,7 +36,6 @@ public class MyTree {
 		System.out.println("Smallest in a Tree: " + SmallestinTree(root));
 		System.out.println("dfas" + largestValues(root));
 		System.out.println("preorder: " +  preorder(root));
-//		System.out.println("preorderi: " +  preorderi(root));
 		System.out.println("inorder: " + inorder(root));
 		System.out.println("inorder Iterative: " + inorderI(root));
 		System.out.println("postorder: " + postorder(root));
@@ -64,6 +63,17 @@ public class MyTree {
 		System.out.println("Sum of left leave is " + sumOfLeftLeaves(root));
 		System.out.println("Unitree boolean is " + uniTree(root));
 		System.out.println("Count of unitree is " + countUniTree(root));
+
+		// Binary Tree Operations
+		String serializeResult = serialize(root);
+		System.out.println("Serialization of the tree: " + serializeResult);
+		System.out.println("Start of deserializaton: ");
+		System.out.println("Root value: " + deserialize(serializeResult).val);
+		System.out.println("Left value: " + deserialize(serializeResult).left.val);
+		System.out.println("Right value: " + deserialize(serializeResult).right.val);
+
+
+		// Binary Search Tree
 		TreeNode BSTRoot = new TreeNode(0);
 		BSTRoot.left = new TreeNode(-2);
 		BSTRoot.right = new TreeNode(2);
@@ -71,9 +81,7 @@ public class MyTree {
 		BSTRoot.left.right = new TreeNode(-1);
 		BSTRoot.right.right = new TreeNode(5);
 		BSTRoot.right.left = new TreeNode(1);
-		
-		
-		
+				
 		System.out.println(SmallestBST(BSTRoot));
 		System.out.println(SecondSmall(BSTRoot));
 		System.out.println(LargestBST(BSTRoot));
@@ -81,19 +89,100 @@ public class MyTree {
 		System.out.println("Search 2 in BST: " + SearchVal(BSTRoot, 2));
 		System.out.println("Search 14 in BST: " + SearchVal(BSTRoot, 14));
 		System.out.println("Add 28 in BST");
-		// System.out.println("Add 28 in BST: " + SearchVal(BSTRoot, 28));
+		
 		System.out.println("Before adding, the in order BST is " + inorderI(BSTRoot));
 		TreeNode newBST = addNodeBST(BSTRoot, 28);
 		System.out.println("After adding, the in order BST is " + inorderI(newBST));
+		TreeNode deleted = deleteNodeBST(newBST, 2);
+		System.out.println("After adding, the in order BST is " + inorderI(deleted));
 
 		System.out.println("Max Path Sum: " + maxPathSum(root));
 		System.out.println("Min Path Sum: " + minPathSum(root));
 		System.out.println(longestIncreasingSeq(root));
 	}
 
-	public static TreeNode deleteNodeBST(TreeNode root, int val){
-		return null;
+	public static String serialize(TreeNode tr){
+		if(tr == null){
+			return "X";
+		}else{
+			StringBuilder sb = new StringBuilder();
+			Stack<TreeNode> st = new Stack<>();
+			st.push(tr);
+			while(st.size() > 0){
+				TreeNode curr = st.pop();
+				sb.append(curr.val);
+				sb.append(",");
+				if(curr.right == null){
+					sb.append("X,");
+				}
+				if(curr.left == null){
+					sb.append("X,");
+				}
+				if(curr.right != null){
+					st.push(curr.right);
+				}
+				if(curr.left != null){
+					st.push(curr.left);
+				}
+
+			}
+			sb.setLength(sb.length()-1);
+			return sb.toString();
+		}
 	}
+
+	public static TreeNode rdeserialize(List<String> l){
+		if(l.get(0).equals("X")){
+			l.remove(0);
+			return null;
+		}
+		TreeNode root = new TreeNode(Integer.valueOf(l.get(0)));
+		l.remove(0);
+		root.left = rdeserialize(l);
+		root.right = rdeserialize(l);
+		return root;
+	}
+
+	public static TreeNode deserialize(String result){
+		if(result.length() == 1 && result.charAt(0) == 'X'){
+			return null;
+		}else{
+			String[] allData = result.split(",");
+			List<String> data_list = new LinkedList<String>(Arrays.asList(allData));
+			return rdeserialize(data_list);
+		}
+	}
+
+	public static TreeNode deleteNodeBST(TreeNode root, int val){
+		if(root == null){
+			return null;
+		}else{
+			if(root.val < val){
+				root.right = deleteNodeBST(root.right, val);
+			}else if(root.val > val){
+				root.left = deleteNodeBST(root.left, val);
+			}else{
+				if(root.left == null && root.right == null){
+					return null;
+				}else if(root.left == null && root.right != null){
+					return root.right;
+				}else if(root.left != null && root.right == null){
+					return root.left;
+				}else{
+					root.val = findMax(root.left);
+					root.left = deleteNodeBST(root.left, root.val);
+				}
+			}
+			return root;
+		}
+	}
+
+	public static int findMax(TreeNode root){
+        while(root.right != null){
+            root = root.right;
+        }
+        return root.val;
+    }
 
 	public static TreeNode addNodeBST(TreeNode root, int val){
 		if(root == null){

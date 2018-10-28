@@ -12,13 +12,17 @@ public class MyHeap{
 		minHeap = addValue(minHeap, 14);
 		
 		System.out.println("Size of the heap: " + getSize(minHeap));
-		removeTop(minHeap);
+		minHeap = removeTop(minHeap);
+		// minHeap = generalRemove(minHeap);
 		System.out.println(searchVal(minHeap, 12));
 		System.out.println(searchVal(minHeap, 2));
+
 	}
 
-	public static void removeTop(TreeNode[] currTree){
-		printTree(currTree);
+	
+
+	public static TreeNode[] removeTop(TreeNode[] currTree){
+		System.out.println("Element removed: " + currTree[1].val);
 		int size = getSize(currTree);
 		int lastVal = currTree[size].val;
 		currTree[size] = null;
@@ -42,7 +46,7 @@ public class MyHeap{
 		}
 		printTree(currTree);
 		
-		return;
+		return currTree;
 	}
 
 	public static int getSize(TreeNode[] currTree){
