@@ -47,6 +47,7 @@ public class MyTree {
 		System.out.println();
 		BFS(root);
 		BFSI(root);
+		ReverseBFS(root);
 		System.out.println(numTrees(1));
 		// Iterative and Recursive solution of the has Path Sum problem
 		System.out.println(hasPathSumI(root, 2));
@@ -63,6 +64,7 @@ public class MyTree {
 		System.out.println("Sum of left leave is " + sumOfLeftLeaves(root));
 		System.out.println("Unitree boolean is " + uniTree(root));
 		System.out.println("Count of unitree is " + countUniTree(root));
+		System.out.println("lowestCommonAncestor of root left and root right: " + lowestCommonAncestor(root, root.left, root.right).val);
 
 		// Binary Tree Operations
 		String serializeResult = serialize(root);
@@ -71,6 +73,8 @@ public class MyTree {
 		System.out.println("Root value: " + deserialize(serializeResult).val);
 		System.out.println("Left value: " + deserialize(serializeResult).left.val);
 		System.out.println("Right value: " + deserialize(serializeResult).right.val);
+		
+
 
 
 		// Binary Search Tree
@@ -99,6 +103,118 @@ public class MyTree {
 		System.out.println("Max Path Sum: " + maxPathSum(root));
 		System.out.println("Min Path Sum: " + minPathSum(root));
 		System.out.println(longestIncreasingSeq(root));
+		
+		TreeNode BSTRoot2 = new TreeNode(-8);
+		BSTRoot2.left = new TreeNode(-19);
+		BSTRoot2.right = new TreeNode(7);
+		BSTRoot2.left.left = new TreeNode(-25);
+		BSTRoot2.left.right = new TreeNode(-14);
+		BSTRoot2.right.right = new TreeNode(4);
+		
+		System.out.println("Before merging BST2, the in order BST is " + inorderI(BSTRoot));
+//		mergeBST(BSTRoot, BSTRoot2);
+		TreeNode mergeresult = mergeBSTII(BSTRoot, BSTRoot2);
+		System.out.println("After merging BST2, the in order BST is " + inorderI(mergeresult));
+		
+	}
+	
+	public static TreeNode mergeBSTII(TreeNode BSTRoot, TreeNode BST2) {
+		List<Integer> tree1 = inorderI(BSTRoot);
+		List<Integer> tree2 = inorderI(BST2);
+		List<Integer> merged = new LinkedList<Integer>();
+		int iter1 = 0;
+		int iter2 = 0;
+		while(iter1 < tree1.size() && iter2 < tree2.size()) {
+			if(tree1.get(iter1) < tree2.get(iter2)) {
+				merged.add(tree1.get(iter1));
+				iter1++;
+			}else if(tree1.get(iter1) > tree2.get(iter2)) {
+				merged.add(tree2.get(iter2));
+				iter2++;
+			}else {
+				merged.add(tree1.get(iter1));
+				merged.add(tree2.get(iter2));
+				iter1++;
+				iter2++;
+			}
+		}
+		// construct tree
+		
+		return mergeTree(merged, 0, merged.size()-1);		
+	}
+	
+	public static TreeNode mergeTree(List<Integer> merged, int start, int end) {
+		if(start > end) {
+			return null;
+		}else {
+			int midIndex = (start + end) / 2;
+			TreeNode mid = new TreeNode(merged.get(midIndex));
+			mid.left = mergeTree(merged, start, midIndex-1);
+			mid.right = mergeTree(merged, midIndex+1, end);
+			return mid;
+		}
+	}
+	
+	public static TreeNode mergeBST(TreeNode BSTRoot, TreeNode BST2) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(BST2);
+		while(q.size() > 0) {
+			TreeNode curr = q.poll();
+			BSTRoot = addNodeBST(BSTRoot, curr.val);
+			if(curr.left!=null) {
+				q.add(curr.left);
+			}
+			if(curr.right!=null) {
+				q.add(curr.right);
+			}
+		}
+		return BSTRoot;
+	}
+
+	public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q){
+		if(root == null || root == p || root == q){
+			return root;
+		}else{
+			TreeNode left = lowestCommonAncestor(root.left, p, q);
+			TreeNode right = lowestCommonAncestor(root.right, p, q);
+			if(left != null && right != null){
+				return root;
+			}else if(left == null){
+				return right;
+			}else{
+				return left;
+			}
+		}
+	}
+
+	public static void ReverseBFS(TreeNode root){
+		if(root == null){
+			return;
+		}else{
+			Stack<List<Integer>> st = new Stack<>();
+			Queue<TreeNode> q = new LinkedList<>();
+			q.add(root);
+			while(q.size() > 0){
+				int l = q.size();
+				ArrayList<Integer> arr = new ArrayList<>();
+				for(int i = 0; i < l; i++){
+					TreeNode curr = q.poll();
+					arr.add(curr.val);
+					if(curr.left != null){
+						q.add(curr.left);
+					}
+					if(curr.right != null){
+						q.add(curr.right);
+					}
+				}
+				st.push(arr);
+			}
+			int l = st.size();
+			System.out.println("Reverse BFS:");
+			for(int i = 0; i < l; i++){
+				System.out.println(st.pop());
+			}
+		}
 	}
 
 	public static String serialize(TreeNode tr){
