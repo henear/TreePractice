@@ -65,7 +65,9 @@ public class MyTree {
 		System.out.println("Unitree boolean is " + uniTree(root));
 		System.out.println("Count of unitree is " + countUniTree(root));
 		System.out.println("lowestCommonAncestor of root left and root right: " + lowestCommonAncestor(root, root.left, root.right).val);
-
+		System.out.println("All Path:");
+		System.out.println(allPath(root));
+		
 		// Binary Tree Operations
 		String serializeResult = serialize(root);
 		System.out.println("Serialization of the tree: " + serializeResult);
@@ -73,6 +75,7 @@ public class MyTree {
 		System.out.println("Root value: " + deserialize(serializeResult).val);
 		System.out.println("Left value: " + deserialize(serializeResult).left.val);
 		System.out.println("Right value: " + deserialize(serializeResult).right.val);
+		
 		
 
 
@@ -381,15 +384,39 @@ public class MyTree {
 		}
 	}
 	
-	public static int maxPathSum(TreeNode root) {
-		
+	public static int maxPathSum(TreeNode root) {		
 		if(root == null) {
-			return 0;
-			
+			return 0;			
 		}else {
 			return Math.max(maxPathSum(root.left), maxPathSum(root.right)) + root.val;
 		}
-	}	
+	}
+	
+	public static List<List<Integer>> allPath(TreeNode root){
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		if(root == null) {
+			return result;
+		}
+		List<Integer> curList = new ArrayList<>();
+		dfs(result, curList, root);
+		return result;
+	}
+	
+	public static void dfs(List<List<Integer>> result, List<Integer> curList, TreeNode root) {
+		if(root.left == null && root.right == null) {
+			curList.add(root.val);
+			result.add(new ArrayList<Integer>(curList));
+			return;
+		}else {
+			curList.add(root.val);
+			if(root.left != null) {
+				dfs(result, curList, root.left);
+			}
+			if(root.right != null) {
+				dfs(result, curList, root.right);
+			}
+		}
+	}
 	
 	public static int SecondLarge(TreeNode BSTRoot) {
 		if(BSTRoot.right != null) {
