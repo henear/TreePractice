@@ -67,6 +67,13 @@ public class MyTree {
 		System.out.println("lowestCommonAncestor of root left and root right: " + lowestCommonAncestor(root, root.left, root.right).val);
 		System.out.println("All Path:");
 		System.out.println(allPath(root));
+		ExpTreeNode posts = constructExpTreePostFix("a b + c d e + * *");
+		System.out.println("~~");
+		System.out.println(posts.val);
+		System.out.println(posts.left.val);
+		System.out.println(posts.right.val);
+		System.out.println("~~");
+		ExpTreeNode prefixes = constructExpTreePreFix("a b + c d e + * *");
 		
 		// Binary Tree Operations
 		String serializeResult = serialize(root);
@@ -144,6 +151,40 @@ public class MyTree {
 		// construct tree
 		
 		return mergeTree(merged, 0, merged.size()-1);		
+	}
+	
+	public static ExpTreeNode constructExpTreePreFix(String prefix) {
+		Stack<ExpTreeNode> st = new Stack<>();
+		for(int i = prefix.length()-1; i>=0;i-- ) {
+			char curr = prefix.charAt(i);
+			if(curr == ' ') {
+				continue;
+			}
+			ExpTreeNode cur = new ExpTreeNode(curr);
+			if(curr == '+' || curr == '-' || curr == '*' || curr == '/') {				
+				cur.left = st.pop();
+				cur.right = st.pop();
+			}
+			st.push(cur);
+		}
+		return st.pop();
+	}
+	
+	public static ExpTreeNode constructExpTreePostFix(String postfix) {
+		Stack<ExpTreeNode> st = new Stack<>();
+		for(int i = 0; i < postfix.length(); i++) {
+			char curr = postfix.charAt(i);
+			if(curr == ' ') {
+				continue;
+			}
+			ExpTreeNode cur = new ExpTreeNode(curr);
+			if(curr == '+' || curr == '-' || curr == '*' || curr == '/') {				
+				cur.left = st.pop();
+				cur.right = st.pop();
+			}
+			st.push(cur);
+		}
+		return st.pop();
 	}
 	
 	public static TreeNode mergeTree(List<Integer> merged, int start, int end) {
@@ -403,6 +444,7 @@ public class MyTree {
 	}
 	
 	public static void dfs(List<List<Integer>> result, List<Integer> curList, TreeNode root) {
+		
 		if(root.left == null && root.right == null) {
 			curList.add(root.val);
 			result.add(new ArrayList<Integer>(curList));
